@@ -18,9 +18,9 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Iterations | 5 |
-| Total Weight (kg) | 125 |
-| Total Time (min) | 80 |
+| Total Iterations | 6 |
+| Total Weight (kg) | 150 |
+| Total Time (min) | 95 |
 | Failed Attempts | 1 |
 
 ---
@@ -106,7 +106,7 @@ Aura Chat: modern, light-mode, white tones design. Use a soft blue/purple gradie
 
 | Field | Value |
 |-------|-------|
-| Feature | Multi-Screen Architecture & Persistence |
+| Feature | Archives, Profile & Settings (Phase A) |
 | Weight | 25 kg |
 | Tool Used | Stitch + Antigravity |
 | Time | 15 min |
@@ -115,22 +115,22 @@ Aura Chat: modern, light-mode, white tones design. Use a soft blue/purple gradie
 
 **Prompt given to AI:**
 ```
-Uygulamayı tek sohbetten çıkarıp; WhatsApp gibi Ana Sayfa (Liste), Profil ve Ayarlar içeren çoklu ekran yapısına geçir. Mesajları AsyncStorage ile telefona kaydet.
+Faz A: Arşivlenenler ekranı ekle, Profil/Ayarlar kısmını (isim, kullanıcı adı, ayarlar) detaylandır. Renk seçme kısmını Ayarların içine taşı.
 ```
 
 **What happened:**
-- Refactored `App.js` into a screen router. Installed `AsyncStorage` and implemented save/load hooks. Added `ChatListItem`, `BottomNav`, `FAB` components. Designed the main list via Stitch Aura Ethos.
+- Implemented `archive` screen with `EmptyState`. Enhanced `settings` with `ProfileHeader` and `SettingItem`. Added `userName` persistence. Fixed Metro cache issues that caused bundling errors.
 
 **Screenshot:** `[link]`
 
-**Commit:** `[NAIM: AuraChat] Multi-Screen & AsyncStorage - 25kg`
+**Commit:** `[NAIM: AuraChat] Phase A: Archives & Profile - 25kg`
 
 ---
 
 ## 🧠 Reflection (fill at the end)
 
 **Hardest part:**
-> Migrating the entire state from a single-screen array to a persistent, multi-screen SDUI structure while maintaining the "Ethereal Conduit" design.
+> Solving the "Unable to resolve react" bundling error by flushing Metro cache while simultaneously expanding the UI logic to handle 4 separate screens.
 
 **What AI did well:**
-> Designed the Chat List to perfectly match the previous iteration's premium "White Tone" aesthetic using Stitch.
+> Seamlessly integrated the "Aura Ethos" design across Archive and Settings, maintaining a consistent premium look with tonal shifts instead of borders.

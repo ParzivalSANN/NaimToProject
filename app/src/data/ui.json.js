@@ -54,7 +54,6 @@ export const screens = {
           status: "Çevrimiçi"
         }
       },
-      // Mesajlar App.js tarafından state'den basılacak
       {
         type: "ChatInput",
         props: {
@@ -64,22 +63,63 @@ export const screens = {
       }
     ]
   },
+  archive: {
+    id: "archive-screen",
+    title: "Arşiv",
+    nodes: [
+      {
+        type: "ChatHeader", // Sohbet başlığı tipinde ama Arşiv başlığı olarak özelleştireceğiz
+        props: {
+          name: "Arşivlenmiş Sohbetler",
+          status: "Sadece Okunabilir"
+        }
+      },
+      {
+        type: "EmptyState",
+        props: {
+          title: "Henüz arşivlenmiş sohbet yok",
+          message: "Sohbetlerini düzenli tutmak için buraya taşıyabilirsin."
+        }
+      }
+    ]
+  },
   settings: {
     id: "settings-screen",
     title: "Ayarlar",
     nodes: [
       {
-        type: "Header",
+        type: "ProfileHeader",
         props: {
-          text: "Ayarlar",
-          subtitle: "Özelleştirme ve Profil"
+          name: "Misafir Kullanıcı",
+          username: "@aura_fan",
+          status: "Müsait"
         }
+      },
+      {
+        type: "SettingItem",
+        props: {
+          icon: "👤",
+          label: "Hesap Bilgileri",
+          screen: "profile_edit"
+        }
+      },
+      {
+        type: "SettingItem",
+        props: {
+          icon: "📦",
+          label: "Arşivlenmiş Sohbetler",
+          screen: "archive"
+        }
+      },
+      {
+        type: "Spacer",
+        props: { height: 24 }
       },
       {
         type: "Card",
         props: {
-          title: "Tema Seçimi",
-          body: "Uygulamanın görünümünü buradan değiştirebilirsin."
+          title: "Görünüm ve Tema",
+          body: "Uygulamanın rengini 'Aura Ethos' tasarım sistemine göre ayarla."
         }
       },
       {

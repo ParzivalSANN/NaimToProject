@@ -26,6 +26,8 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [themeName, setThemeName] = useState("aura");
+  const [userName, setUserName] = useState("Misafir Kullanıcı");
+  const [userHandle, setUserHandle] = useState("@aura_fan");
   const [isLoaded, setIsLoaded] = useState(false);
   const scrollRef = useRef(null);
 
@@ -37,8 +39,10 @@ export default function App() {
       try {
         const savedMessages = await AsyncStorage.getItem('@aura_messages');
         const savedTheme = await AsyncStorage.getItem('@aura_theme');
+        const savedName = await AsyncStorage.getItem('@aura_username');
         if (savedMessages) setMessages(JSON.parse(savedMessages));
         if (savedTheme) setThemeName(savedTheme);
+        if (savedName) setUserName(savedName);
       } catch (e) {
         console.error("Yükleme hatası:", e);
       } finally {
@@ -53,8 +57,9 @@ export default function App() {
     if (isLoaded) {
       AsyncStorage.setItem('@aura_messages', JSON.stringify(messages));
       AsyncStorage.setItem('@aura_theme', themeName);
+      AsyncStorage.setItem('@aura_username', userName);
     }
-  }, [messages, themeName, isLoaded]);
+  }, [messages, themeName, userName, isLoaded]);
 
   // ── Otomatik Kaydırma ─────────────────────────────────────────────
   const scrollToBottom = () => {
@@ -85,18 +90,28 @@ export default function App() {
     },
     onChangeText: (text) => setInputText(text),
     setTheme: (name) => setThemeName(name),
-    setScreen: (name) => setCurrentScreen(name)
+    setScreen: (name) => setCurrentScreen(name),
+    setUserName: (name) => setUserName(name)
   };
 
   // ── Render Mantığı ────────────────────────────────────────────────
   const screenData = screens[currentScreen] || screens.main;
   
-  // Chat ekranı için özel mesaj listesi birleştirme
-  let finalNodes = [...screenData.nodes];
+  // Ekran verilerini klonla ve kullanıcı bilgisini enjekte et
+  let finalNodes = screenData.nodes.map(node => {
+    if (node.type === "ProfileHeader") {
+      return { ...node, props: { ...node.props, name: userName, username: userHandle } };
+    }
+    return node;
+  });
+
+  // Chat ekranı için mesaj listesi birleştirme
   if (currentScreen === 'chat') {
     const inputIndex = finalNodes.findIndex(n => n.type === 'ChatInput');
     if (inputIndex > -1) {
-      finalNodes.splice(inputIndex, 0, ...messages);
+      const chatNodes = [...finalNodes];
+      chatNodes.splice(inputIndex, 0, ...messages);
+      finalNodes = chatNodes;
     }
   }
 
@@ -150,6 +165,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingBottom: 100, // BottomNav için boşluk
+    paddingBottom: 100,
   },
 });

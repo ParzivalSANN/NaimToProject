@@ -96,6 +96,47 @@ const COMPONENT_MAP = {
     </View>
   ),
 
+  ProfileHeader: ({ name, username, status, theme, handlers }) => (
+    <View style={[styles.profileHeader, { backgroundColor: theme.bg }]}>
+      <View style={[styles.profileAvatar, { backgroundColor: theme.bubbleThem }]}>
+        <Text style={[styles.avatarInitial, { color: theme.primary }]}>{name?.[0]}</Text>
+      </View>
+      <Text style={[styles.profileName, { color: theme.text }]}>{name}</Text>
+      <Text style={[styles.profileUsername, { color: theme.text, opacity: 0.6 }]}>{username}</Text>
+      <TouchableOpacity 
+        style={[styles.editButton, { borderColor: theme.primary }]}
+        onPress={() => handlers.setScreen("chat")} // Şimdilik chat'e yolla düzenleme için
+      >
+        <Text style={[styles.editButtonText, { color: theme.primary }]}>Profili Düzenle</Text>
+      </TouchableOpacity>
+    </View>
+  ),
+
+  SettingItem: ({ icon, label, screen, theme, handlers }) => (
+    <TouchableOpacity 
+      style={[styles.settingItem, { borderBottomColor: theme.bg === '#000000' ? '#222' : '#F1F1F1' }]}
+      onPress={() => handlers.setScreen(screen || "settings")}
+    >
+      <View style={styles.settingItemLeft}>
+        <View style={[styles.settingIconBox, { backgroundColor: theme.bubbleThem }]}>
+          <Text style={styles.settingIcon}>{icon}</Text>
+        </View>
+        <Text style={[styles.settingLabel, { color: theme.text }]}>{label}</Text>
+      </View>
+      <Text style={[styles.settingArrow, { color: theme.text, opacity: 0.3 }]}>›</Text>
+    </TouchableOpacity>
+  ),
+
+  EmptyState: ({ title, message, theme }) => (
+    <View style={styles.emptyStateContainer}>
+      <View style={[styles.emptyStateIcon, { backgroundColor: theme.bubbleThem }]}>
+        <Text style={{ fontSize: 40 }}>📦</Text>
+      </View>
+      <Text style={[styles.emptyStateTitle, { color: theme.text }]}>{title}</Text>
+      <Text style={[styles.emptyStateMessage, { color: theme.text, opacity: 0.6 }]}>{message}</Text>
+    </View>
+  ),
+
   ChatHeader: ({ name, status, theme, handlers }) => (
     <View style={[styles.chatHeader, { backgroundColor: theme.bg }]}>
       <TouchableOpacity onPress={() => handlers.setScreen("main")} style={styles.backButton}>
@@ -408,7 +449,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.3)',
   },
-  // ── Aura Chat İterasyon 5 Ek Stiller ─────────────────────
+  // ── Aura Chat İterasyon 5 & 6 Ek Stiller ─────────────────────
   chatHeader: {
     paddingTop: 10,
     paddingBottom: 12,
@@ -502,7 +543,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingBottom: 25, // Safer for notch
+    paddingBottom: 25,
     borderTopWidth: 1,
   },
   navItem: {
@@ -535,5 +576,105 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 28,
     fontWeight: '300',
+  },
+  profileHeader: {
+    paddingTop: 40,
+    paddingBottom: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileAvatar: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  avatarInitial: {
+    fontSize: 32,
+    fontWeight: '800',
+  },
+  profileName: {
+    fontSize: 22,
+    fontWeight: '800',
+    letterSpacing: -0.5,
+  },
+  profileUsername: {
+    fontSize: 14,
+    marginTop: 2,
+    marginBottom: 16,
+  },
+  editButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    borderWidth: 1.5,
+  },
+  editButtonText: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  settingItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+  },
+  settingItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  settingIconBox: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  settingIcon: {
+    fontSize: 18,
+  },
+  settingLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  settingArrow: {
+    fontSize: 22,
+    fontWeight: '400',
+  },
+  emptyStateContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 80,
+    paddingHorizontal: 40,
+  },
+  emptyStateIcon: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  emptyStateTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  emptyStateMessage: {
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 20,
   },
 });
