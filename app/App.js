@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,29 +7,63 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  View
+  View,
+  TouchableOpacity
 } from 'react-native';
 
 // ── Renderer & Veri ─────────────────────────────────────────────────
 import { renderNode } from './src/renderer/components';
 import { screen as initialScreen } from './src/data/ui.json';
 
+// ── Tema Tanımları ──────────────────────────────────────────────────
+const THEMES = {
+  aura: {
+    bg: '#F8F9FA',
+    primary: '#630ED4',
+    secondary: '#A855F7',
+    text: '#191C1D',
+    bubbleThem: '#FFFFFF',
+    bubbleThemText: '#191C1D',
+    statusBar: 'dark-content'
+  },
+  midnight: {
+    bg: '#0d0d1a',
+    primary: '#00f2f2',
+    secondary: '#00a0a0',
+    text: '#e0e0ff',
+    bubbleThem: '#1e1e3a',
+    bubbleThemText: '#e0e0ff',
+    statusBar: 'light-content'
+  },
+  noir: {
+    bg: '#000000',
+    primary: '#FFFFFF',
+    secondary: '#888888',
+    text: '#FFFFFF',
+    bubbleThem: '#1a1a1a',
+    bubbleThemText: '#FFFFFF',
+    statusBar: 'light-content'
+  }
+};
+
 export default function App() {
   const [screen, setScreen] = useState(initialScreen);
   const [inputText, setInputText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [themeName, setThemeName] = useState("aura");
+  const scrollRef = useRef(null);
 
-  // ── Backend Simülasyonu (Fetch) ──────────────────────────────────
+  const activeTheme = THEMES[themeName];
+
+  // ── Otomatik Kaydırma ─────────────────────────────────────────────
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      scrollRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+  };
+
   useEffect(() => {
-    const fetchUI = async () => {
-      setIsLoading(true);
-      setTimeout(() => {
-        setScreen(initialScreen);
-        setIsLoading(false);
-      }, 500);
-    };
-    fetchUI();
-  }, []);
+    scrollToBottom();
+  }, [screen.nodes.length]);
 
   // ── Handler Haritası ──────────────────────────────────────────────
   const handlers = {
@@ -46,7 +80,6 @@ export default function App() {
       };
 
       const updatedNodes = [...screen.nodes];
-      // Mesajları ChatInput'dan bağımsız olarak listenin sonuna ekle
       const inputIndex = updatedNodes.findIndex(node => node.type === "ChatInput");
       if (inputIndex > -1) {
         updatedNodes.splice(inputIndex, 0, newMessage);
@@ -56,17 +89,18 @@ export default function App() {
       
       setScreen({ ...screen, nodes: updatedNodes });
       setInputText("");
+      scrollToBottom();
     },
-    onChangeText: (text) => setInputText(text)
+    onChangeText: (text) => setInputText(text),
+    setTheme: (name) => setThemeName(name)
   };
 
-  // Liste ve Input düğümlerini ayır (Layout için)
   const listNodes = screen.nodes.filter(node => node.type !== "ChatInput");
   const inputNode = screen.nodes.find(node => node.type === "ChatInput");
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8F9FA" />
+    <SafeAreaView style={[styles.container, { backgroundColor: activeTheme.bg }]}>
+      <StatusBar barStyle={activeTheme.statusBar} backgroundColor={activeTheme.bg} />
       
       <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -74,14 +108,15 @@ export default function App() {
       >
         <View style={{ flex: 1 }}>
           <ScrollView
+            ref={scrollRef}
             style={styles.scroll}
             contentContainerStyle={styles.content}
             keyboardShouldPersistTaps="handled"
+            onContentSizeChange={scrollToBottom}
           >
-            {listNodes.map((node, i) => renderNode(node, i, handlers))}
+            {listNodes.map((node, i) => renderNode(node, i, handlers, activeTheme))}
           </ScrollView>
 
-          {/* Input alanını ScrollView'un dışına, en alta sabitledik */}
           {inputNode && renderNode({
             ...inputNode,
             props: { 
@@ -90,7 +125,7 @@ export default function App() {
               onChangeText: handlers.onChangeText,
               onSend: handlers.handleSend 
             }
-          }, "input-fixed")}
+          }, "input-fixed", handlers, activeTheme)}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -100,7 +135,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
   },
   scroll: {
     flex: 1,

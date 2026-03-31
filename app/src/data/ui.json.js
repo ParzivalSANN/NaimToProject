@@ -10,31 +10,37 @@ export const screen = {
       }
     },
     {
+      type: "ThemeSelector",
+      props: {
+        themes: ["aura", "midnight", "noir"]
+      }
+    },
+    {
       type: "Spacer",
-      props: { height: 24 }
+      props: { height: 12 }
     },
     {
       type: "MessageBubble",
       props: {
-        text: "Aura Chat'e hoş geldin! Temiz ve ferah bir tasarım seni bekliyor.",
+        text: "Aura Chat'e hoş geldin! Temaları yukarıdan değiştirebilirsin.",
         sender: "them",
-        time: "17:10"
+        time: "17:15"
       }
     },
     {
       type: "MessageBubble",
       props: {
-        text: "Mor ve beyaz tonları harika duruyor. Tasarım sistemine 'The Ethereal Conduit' adını verdik.",
+        text: "Süper! Midnight ve Noir temaları da harika görünüyor.",
         sender: "me",
-        time: "17:11"
+        time: "17:16"
       }
     },
     {
       type: "MessageBubble",
       props: {
-        text: "Gerçekten de öyle. Akıcı ve şık bir deneyim için her şey hazır.",
+        text: "Mesaj gönderince artık liste otomatik olarak aşağı kayıyor.",
         sender: "them",
-        time: "17:12"
+        time: "17:17"
       }
     },
     {
@@ -44,7 +50,7 @@ export const screen = {
     {
       type: "ChatInput",
       props: {
-        placeholder: "Aura ile bir şeyler yaz...",
+        placeholder: "Bir mesaj yaz...",
       },
       onSend: "handleSend"
     }

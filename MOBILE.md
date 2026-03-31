@@ -18,9 +18,9 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Iterations | 3 |
-| Total Weight (kg) | 75 |
-| Total Time (min) | 50 |
+| Total Iterations | 4 |
+| Total Weight (kg) | 100 |
+| Total Time (min) | 65 |
 | Failed Attempts | 1 |
 
 ---
@@ -104,26 +104,36 @@ Aura Chat: modern, light-mode, white tones design. Use a soft blue/purple gradie
 
 ---
 
-*(Copy this block for each new iteration)*
+| Field | Value |
+|-------|-------|
+| Feature | Dynamic Themes & UX Refinements |
+| Weight | 25 kg |
+| Tool Used | Antigravity |
+| Time | 15 min |
+| Attempts | 1 |
+| Status | ✅ Success |
+
+**Prompt given to AI:**
+```
+Mesaj atınca listenin alta kayması (auto-scroll), gönder butonuna ikon (↑) ve kullanıcıya tema seçtirme (Aura, Midnight, Noir) özelliklerini ekle. Mor arka planda beyaz metin olsun.
+```
+
+**What happened:**
+- Implemented a dynamic theme system via props. Added `ScrollView` ref for auto-scrolling. Updated `ChatInput` with a modern icon button. Added `ThemeSelector` to the top of the chat.
+
+**Screenshot:** `[link]`
+
+**Commit:** `[NAIM: AuraChat] Dynamic Themes & Auto-scroll - 25kg`
 
 ---
 
 ## 🧠 Reflection (fill at the end)
 
 **Hardest part:**
-> 
+> Ensuring the dynamic theme props correctly propagate through the SDUI renderer without breaking existing static nodes.
 
 **What AI did well:**
-> 
+> Seamlessly integrated the theme switcher into the JSON-driven UI.
 
 **Where AI failed:**
-> 
-
-**If I started over, I would:**
-> 
-
-**Best feature I built:**
-> 
-
-**Biggest surprise:**
-> 
+> The first layout attempt of the floating input bar needed a manual fix for ScrollView positioning.

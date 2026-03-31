@@ -3,15 +3,15 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 
 const COMPONENT_MAP = {
 
-  Header: ({ text, subtitle }) => (
-    <View style={styles.header}>
-      <Text style={styles.headerText}>{text}</Text>
-      {subtitle ? <Text style={styles.subtitleText}>{subtitle}</Text> : null}
+  Header: ({ text, subtitle }, index, handlers, theme) => (
+    <View style={[styles.header, { backgroundColor: theme.bg }]}>
+      <Text style={[styles.headerText, { color: theme.text }]}>{text}</Text>
+      {subtitle ? <Text style={[styles.subtitleText, { color: theme.text, opacity: 0.7 }]}>{subtitle}</Text> : null}
     </View>
   ),
 
-  Text: ({ text, align }) => (
-    <Text style={[styles.bodyText, align && { textAlign: align }]}>{text}</Text>
+  Text: ({ text, align }, index, handlers, theme) => (
+    <Text style={[styles.bodyText, align && { textAlign: align }, { color: theme.text }]}>{text}</Text>
   ),
 
   Spacer: ({ height = 16 }) => (
@@ -34,44 +34,65 @@ const COMPONENT_MAP = {
     </TouchableOpacity>
   ),
 
-  Card: ({ title, body }) => (
-    <View style={styles.card}>
-      {title ? <Text style={styles.cardTitle}>{title}</Text> : null}
-      {body  ? <Text style={styles.cardBody}>{body}</Text>   : null}
+  Card: ({ title, body }, index, handlers, theme) => (
+    <View style={[styles.card, { backgroundColor: theme.bg === '#FFFFFF' ? '#F8F9FA' : theme.bubbleThem }]}>
+      {title ? <Text style={[styles.cardTitle, { color: theme.text }]}>{title}</Text> : null}
+      {body  ? <Text style={[styles.cardBody, { color: theme.text, opacity: 0.8 }]}>{body}</Text>   : null}
     </View>
   ),
 
-  MessageBubble: ({ text, sender, time }) => (
+  MessageBubble: ({ text, sender, time }, index, handlers, theme) => (
     <View style={[
       styles.bubbleContainer,
       sender === 'me' ? styles.bubbleMeContainer : styles.bubbleThemContainer
     ]}>
       <View style={[
         styles.bubble,
-        sender === 'me' ? styles.bubbleMe : styles.bubbleThem
+        sender === 'me' 
+          ? { backgroundColor: theme.primary, borderBottomRightRadius: 6 } 
+          : { backgroundColor: theme.bubbleThem, borderBottomLeftRadius: 6 }
       ]}>
         <Text style={[
           styles.bubbleText,
-          sender === 'me' ? styles.bubbleMeText : styles.bubbleThemText
+          sender === 'me' ? { color: '#FFF' } : { color: theme.bubbleThemText }
         ]}>{text}</Text>
-        {time ? <Text style={styles.bubbleTime}>{time}</Text> : null}
+        {time ? <Text style={[styles.bubbleTime, { color: sender === 'me' ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)' }]}>{time}</Text> : null}
       </View>
     </View>
   ),
 
-  ChatInput: ({ placeholder, value, onChangeText, onSend }) => (
-    <View style={styles.inputContainer}>
+  ChatInput: ({ placeholder, value, onChangeText, onSend }, index, handlers, theme) => (
+    <View style={[styles.inputContainer, { backgroundColor: theme.bg, borderTopColor: theme.bg === '#000000' ? '#333' : '#E7E8E9' }]}>
       <TextInput
-        style={styles.chatInput}
+        style={[styles.chatInput, { backgroundColor: theme.bubbleThem, color: theme.text }]}
         placeholder={placeholder || "Type a message..."}
         value={value}
         onChangeText={onChangeText}
         placeholderTextColor="#888"
         multiline={false}
       />
-      <TouchableOpacity style={styles.sendButton} onPress={onSend}>
-        <Text style={styles.sendButtonText}>Send</Text>
+      <TouchableOpacity 
+        style={[styles.sendButton, { backgroundColor: theme.primary }]} 
+        onPress={onSend}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.sendButtonText}>↑</Text>
       </TouchableOpacity>
+    </View>
+  ),
+
+  ThemeSelector: ({ themes }, index, handlers, theme) => (
+    <View style={styles.themeSelector}>
+      {['aura', 'midnight', 'noir'].map(name => (
+        <TouchableOpacity 
+          key={name}
+          onPress={() => handlers.setTheme(name)}
+          style={[
+            styles.themeCircle, 
+            { backgroundColor: name === 'aura' ? '#630ED4' : name === 'midnight' ? '#00f2f2' : '#333' }
+          ]}
+        />
+      ))}
     </View>
   ),
 
@@ -86,7 +107,7 @@ const COMPONENT_MAP = {
   ),
 };
 
-export function renderNode(node, index, handlers = {}) {
+export function renderNode(node, index, handlers = {}, theme = {}) {
   const Component = COMPONENT_MAP[node.type];
 
   if (!Component) {
@@ -97,13 +118,8 @@ export function renderNode(node, index, handlers = {}) {
     );
   }
 
-  const eventProps = {};
-  if (node.onPress && handlers[node.onPress]) {
-    eventProps.onPress = handlers[node.onPress];
-  }
-
   return (
-    <Component key={`${node.type}-${index}`} {...node.props} {...eventProps} />
+    <Component key={`${node.type}-${index}`} {...node.props} index={index} handlers={handlers} theme={theme} />
   );
 }
 
@@ -313,6 +329,19 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: '#FFFFFF',
     fontWeight: '800',
-    fontSize: 13,
+    fontSize: 20, // Reduced from text to icon size
+  },
+  themeSelector: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 12,
+  },
+  themeCircle: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginHorizontal: 10,
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.3)',
   },
 });
