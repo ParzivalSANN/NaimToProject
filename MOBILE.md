@@ -18,9 +18,9 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Iterations | 4 |
-| Total Weight (kg) | 100 |
-| Total Time (min) | 65 |
+| Total Iterations | 5 |
+| Total Weight (kg) | 125 |
+| Total Time (min) | 80 |
 | Failed Attempts | 1 |
 
 ---
@@ -106,34 +106,31 @@ Aura Chat: modern, light-mode, white tones design. Use a soft blue/purple gradie
 
 | Field | Value |
 |-------|-------|
-| Feature | Dynamic Themes & UX Refinements |
+| Feature | Multi-Screen Architecture & Persistence |
 | Weight | 25 kg |
-| Tool Used | Antigravity |
+| Tool Used | Stitch + Antigravity |
 | Time | 15 min |
 | Attempts | 1 |
 | Status | ✅ Success |
 
 **Prompt given to AI:**
 ```
-Mesaj atınca listenin alta kayması (auto-scroll), gönder butonuna ikon (↑) ve kullanıcıya tema seçtirme (Aura, Midnight, Noir) özelliklerini ekle. Mor arka planda beyaz metin olsun.
+Uygulamayı tek sohbetten çıkarıp; WhatsApp gibi Ana Sayfa (Liste), Profil ve Ayarlar içeren çoklu ekran yapısına geçir. Mesajları AsyncStorage ile telefona kaydet.
 ```
 
 **What happened:**
-- Implemented a dynamic theme system via props. Added `ScrollView` ref for auto-scrolling. Updated `ChatInput` with a modern icon button. Added `ThemeSelector` to the top of the chat.
+- Refactored `App.js` into a screen router. Installed `AsyncStorage` and implemented save/load hooks. Added `ChatListItem`, `BottomNav`, `FAB` components. Designed the main list via Stitch Aura Ethos.
 
 **Screenshot:** `[link]`
 
-**Commit:** `[NAIM: AuraChat] Dynamic Themes & Auto-scroll - 25kg`
+**Commit:** `[NAIM: AuraChat] Multi-Screen & AsyncStorage - 25kg`
 
 ---
 
 ## 🧠 Reflection (fill at the end)
 
 **Hardest part:**
-> Ensuring the dynamic theme props correctly propagate through the SDUI renderer without breaking existing static nodes.
+> Migrating the entire state from a single-screen array to a persistent, multi-screen SDUI structure while maintaining the "Ethereal Conduit" design.
 
 **What AI did well:**
-> Seamlessly integrated the theme switcher into the JSON-driven UI.
-
-**Where AI failed:**
-> The first layout attempt of the floating input bar needed a manual fix for ScrollView positioning.
+> Designed the Chat List to perfectly match the previous iteration's premium "White Tone" aesthetic using Stitch.

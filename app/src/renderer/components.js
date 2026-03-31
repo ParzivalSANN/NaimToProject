@@ -96,6 +96,70 @@ const COMPONENT_MAP = {
     </View>
   ),
 
+  ChatHeader: ({ name, status, theme, handlers }) => (
+    <View style={[styles.chatHeader, { backgroundColor: theme.bg }]}>
+      <TouchableOpacity onPress={() => handlers.setScreen("main")} style={styles.backButton}>
+        <Text style={[styles.backButtonText, { color: theme.primary }]}>←</Text>
+      </TouchableOpacity>
+      <View style={styles.avatarSmall} />
+      <View style={styles.headerInfo}>
+        <Text style={[styles.chatHeaderName, { color: theme.text }]}>{name}</Text>
+        <Text style={[styles.chatHeaderStatus, { color: theme.primary }]}>{status}</Text>
+      </View>
+    </View>
+  ),
+
+  ChatListItem: ({ name, lastMessage, time, unread, screen, theme, handlers }) => (
+    <TouchableOpacity 
+      style={[styles.chatListItem, { backgroundColor: theme.bg }]}
+      onPress={() => handlers.setScreen(screen || "chat")}
+      activeOpacity={0.6}
+    >
+      <View style={[styles.avatar, { backgroundColor: theme.bubbleThem }]} />
+      <View style={styles.chatListItemContent}>
+        <View style={styles.chatListItemRow}>
+          <Text style={[styles.chatListItemName, { color: theme.text }]}>{name}</Text>
+          <Text style={[styles.chatListItemTime, { color: theme.text, opacity: 0.5 }]}>{time}</Text>
+        </View>
+        <View style={styles.chatListItemRow}>
+          <Text style={[styles.chatListItemLastMsg, { color: theme.text, opacity: 0.6 }]} numberOfLines={1}>
+            {lastMessage}
+          </Text>
+          {unread ? (
+            <View style={[styles.unreadBadge, { backgroundColor: theme.primary }]}>
+              <Text style={styles.unreadText}>{unread}</Text>
+            </View>
+          ) : null}
+        </View>
+      </View>
+    </TouchableOpacity>
+  ),
+
+  BottomNav: ({ active, theme, handlers }) => (
+    <View style={[styles.bottomNav, { backgroundColor: theme.bg, borderTopColor: theme.bubbleThem }]}>
+      {[
+        { id: "main", label: "Mesajlar", icon: "💬" },
+        { id: "status", label: "Durum", icon: "⭕" },
+        { id: "settings", label: "Ayarlar", icon: "⚙️" }
+      ].map(item => (
+        <TouchableOpacity 
+          key={item.id} 
+          style={styles.navItem} 
+          onPress={() => handlers.setScreen(item.id)}
+        >
+          <Text style={[styles.navIcon, active === item.id || (item.id === 'main' && active === 'chats') ? { opacity: 1 } : { opacity: 0.4 }]}>{item.icon}</Text>
+          <Text style={[styles.navLabel, { color: theme.text }, active === item.id || (item.id === 'main' && active === 'chats') ? { fontWeight: '700' } : { opacity: 0.5 }]}>{item.label}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  ),
+
+  FAB: ({ icon, theme }) => (
+    <TouchableOpacity style={[styles.fab, { backgroundColor: theme.primary }]}>
+      <Text style={styles.fabText}>{icon}</Text>
+    </TouchableOpacity>
+  ),
+
   Input: ({ placeholder, value, onChangeText }) => (
     <TextInput
       style={styles.input}
@@ -343,5 +407,133 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.3)',
+  },
+  // ── Aura Chat İterasyon 5 Ek Stiller ─────────────────────
+  chatHeader: {
+    paddingTop: 10,
+    paddingBottom: 12,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  backButton: {
+    paddingRight: 12,
+  },
+  backButtonText: {
+    fontSize: 24,
+    fontWeight: '700',
+  },
+  avatarSmall: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#E7E8E9',
+  },
+  headerInfo: {
+    marginLeft: 12,
+  },
+  chatHeaderName: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  chatHeaderStatus: {
+    fontSize: 11,
+    fontWeight: '600',
+    marginTop: 1,
+  },
+  chatListItem: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+  },
+  chatListItemContent: {
+    flex: 1,
+    marginLeft: 16,
+    justifyContent: 'center',
+  },
+  chatListItemRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  chatListItemName: {
+    fontSize: 17,
+    fontWeight: '700',
+  },
+  chatListItemTime: {
+    fontSize: 12,
+  },
+  chatListItemLastMsg: {
+    fontSize: 14,
+    marginTop: 4,
+    flex: 1,
+    paddingRight: 10,
+  },
+  unreadBadge: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  unreadText: {
+    color: '#FFF',
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  bottomNav: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 80,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingBottom: 25, // Safer for notch
+    borderTopWidth: 1,
+  },
+  navItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  navIcon: {
+    fontSize: 22,
+  },
+  navLabel: {
+    fontSize: 10,
+    marginTop: 4,
+  },
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 100,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  fabText: {
+    color: '#FFF',
+    fontSize: 28,
+    fontWeight: '300',
   },
 });
