@@ -137,6 +137,34 @@ const COMPONENT_MAP = {
     </View>
   ),
 
+  HeaderTabs: ({ tabs, theme, handlers, active }) => (
+    <View style={[styles.headerTabs, { backgroundColor: theme.bg }]}>
+      {tabs.map(tab => (
+        <TouchableOpacity 
+          key={tab.id} 
+          style={[styles.tabItem, active === tab.id && { borderBottomColor: theme.primary, borderBottomWidth: 2 }]}
+          onPress={() => handlers.setScreen(tab.id)}
+        >
+          <Text style={[styles.tabLabel, { color: theme.text }, active === tab.id ? { fontWeight: '800' } : { opacity: 0.5 }]}>
+            {tab.label}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  ),
+
+  TypingIndicator: ({ name, theme, isTyping }) => {
+    if (!isTyping) return null;
+    return (
+      <View style={styles.typingContainer}>
+        <View style={[styles.avatarSmall, { backgroundColor: theme.bubbleThem, width: 24, height: 24 }]} />
+        <View style={[styles.typingBubble, { backgroundColor: theme.bubbleThem }]}>
+          <Text style={[styles.typingText, { color: theme.text, opacity: 0.5 }]}>{name} yazıyor...</Text>
+        </View>
+      </View>
+    );
+  },
+
   ChatHeader: ({ name, status, theme, handlers }) => (
     <View style={[styles.chatHeader, { backgroundColor: theme.bg }]}>
       <TouchableOpacity onPress={() => handlers.setScreen("main")} style={styles.backButton}>
@@ -676,5 +704,35 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     lineHeight: 20,
+  },
+  headerTabs: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+    borderBottomWidth: 0,
+  },
+  tabItem: {
+    marginRight: 24,
+    paddingBottom: 6,
+  },
+  tabLabel: {
+    fontSize: 15,
+  },
+  typingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    marginVertical: 4,
+  },
+  typingBubble: {
+    marginLeft: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 15,
+    borderBottomLeftRadius: 4,
+  },
+  typingText: {
+    fontSize: 12,
+    fontStyle: 'italic',
   },
 });

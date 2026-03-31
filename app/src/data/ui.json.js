@@ -11,13 +11,13 @@ export const screens = {
         }
       },
       {
-        type: "ChatListItem",
+        type: "HeaderTabs",
         props: {
-          name: "Asistan Aura",
-          lastMessage: "Merhaba! Bugün sana nasıl yardımcı olabilirim?",
-          time: "17:59",
-          unread: 1,
-          screen: "chat"
+          tabs: [
+            { id: "main", label: "Sohbetler" },
+            { id: "ai_chat", label: "Aura AI" }
+          ],
+          active: "main"
         }
       },
       {
@@ -27,6 +27,16 @@ export const screens = {
           lastMessage: "Eski sohbetler burada saklanır.",
           time: "Dün",
           screen: "archive"
+        }
+      },
+      {
+        type: "ChatListItem",
+        props: {
+          name: "Asistan Aura",
+          lastMessage: "Merhaba! Bugün sana nasıl yardımcı olabilirim?",
+          time: "17:59",
+          unread: 1,
+          screen: "chat"
         }
       },
       {
@@ -63,12 +73,42 @@ export const screens = {
       }
     ]
   },
+  ai_chat: {
+    id: "ai-aura-room",
+    title: "Aura AI",
+    nodes: [
+      {
+        type: "ChatHeader",
+        props: {
+          name: "Aura AI",
+          status: "Zekâ Devrede (Gemini)"
+        }
+      },
+      {
+        type: "TypingIndicator",
+        props: {
+          name: "Aura"
+        }
+      },
+      {
+        type: "ChatInput",
+        props: {
+          placeholder: "Zekice bir şeyler sor...",
+        },
+        onSend: "handleSendAI"
+      },
+      {
+        type: "BottomNav",
+        props: { active: "chats" }
+      }
+    ]
+  },
   archive: {
     id: "archive-screen",
     title: "Arşiv",
     nodes: [
       {
-        type: "ChatHeader", // Sohbet başlığı tipinde ama Arşiv başlığı olarak özelleştireceğiz
+        type: "ChatHeader",
         props: {
           name: "Arşivlenmiş Sohbetler",
           status: "Sadece Okunabilir"

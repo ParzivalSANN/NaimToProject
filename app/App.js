@@ -14,6 +14,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { renderNode } from './src/renderer/components';
 import { screens } from './src/data/ui.json';
 
+const GEMINI_API_KEY = "AIzaSyBRUAqUNVgMQ_PGF7C00yuj6NGEyQgrkAc";
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
 // ── Tema Tanımları ──────────────────────────────────────────────────
 const THEMES = {
   aura: { bg: '#F8F9FA', primary: '#630ED4', secondary: '#A855F7', text: '#191C1D', bubbleThem: '#FFFFFF', bubbleThemText: '#191C1D', statusBar: 'dark-content' },
@@ -23,11 +26,12 @@ const THEMES = {
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState("main");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]); // Normal sohbetler
+  const [aiMessages, setAiMessages] = useState([]); // Aura AI sohbeti
   const [inputText, setInputText] = useState("");
   const [themeName, setThemeName] = useState("aura");
   const [userName, setUserName] = useState("Misafir Kullanıcı");
-  const [userHandle, setUserHandle] = useState("@aura_fan");
+  const [isTyping, setIsTyping] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const scrollRef = useRef(null);
 
@@ -38,9 +42,12 @@ export default function App() {
     const loadData = async () => {
       try {
         const savedMessages = await AsyncStorage.getItem('@aura_messages');
+        const savedAiMessages = await AsyncStorage.getItem('@aura_ai_messages');
         const savedTheme = await AsyncStorage.getItem('@aura_theme');
         const savedName = await AsyncStorage.getItem('@aura_username');
+        
         if (savedMessages) setMessages(JSON.parse(savedMessages));
+        if (savedAiMessages) setAiMessages(JSON.parse(savedAiMessages));
         if (savedTheme) setThemeName(savedTheme);
         if (savedName) setUserName(savedName);
       } catch (e) {
@@ -56,17 +63,53 @@ export default function App() {
   useEffect(() => {
     if (isLoaded) {
       AsyncStorage.setItem('@aura_messages', JSON.stringify(messages));
+      AsyncStorage.setItem('@aura_ai_messages', JSON.stringify(aiMessages));
       AsyncStorage.setItem('@aura_theme', themeName);
       AsyncStorage.setItem('@aura_username', userName);
     }
-  }, [messages, themeName, userName, isLoaded]);
+  }, [messages, aiMessages, themeName, userName, isLoaded]);
 
   // ── Otomatik Kaydırma ─────────────────────────────────────────────
   const scrollToBottom = () => {
-    if (currentScreen === 'chat') {
-      setTimeout(() => {
-        scrollRef.current?.scrollToEnd({ animated: true });
-      }, 100);
+    setTimeout(() => {
+      scrollRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+  };
+
+  // ── Gemini AI İstek Fonksiyonu ───────────────────────────────────
+  const callGemini = async (userText) => {
+    setIsTyping(true);
+    scrollToBottom();
+
+    try {
+      const response = await fetch(GEMINI_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: `Sen Aura Chat'in premium AI asistanısın. Kısa, havalı ve yardımsever cevaplar verirsin. Kullanıcının adı ${userName}. Soru: ${userText}` }]
+          }]
+        })
+      });
+
+      const data = await response.json();
+      const aiResponseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Üzgünüm, şu an cevap veremiyorum.";
+
+      const aiMessage = {
+        type: "MessageBubble",
+        props: {
+          text: aiResponseText,
+          sender: "aura",
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      };
+
+      setAiMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error("Gemini Hatası:", error);
+    } finally {
+      setIsTyping(false);
+      scrollToBottom();
     }
   };
 
@@ -74,7 +117,6 @@ export default function App() {
   const handlers = {
     handleSend: () => {
       if (inputText.trim() === "") return;
-      
       const newMessage = {
         type: "MessageBubble",
         props: {
@@ -83,35 +125,60 @@ export default function App() {
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       };
-
       setMessages(prev => [...prev, newMessage]);
       setInputText("");
       scrollToBottom();
     },
+    handleSendAI: () => {
+      if (inputText.trim() === "") return;
+      const newMessage = {
+        type: "MessageBubble",
+        props: {
+          text: inputText,
+          sender: "me",
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      };
+      setAiMessages(prev => [...prev, newMessage]);
+      const currentText = inputText;
+      setInputText("");
+      callGemini(currentText);
+    },
     onChangeText: (text) => setInputText(text),
     setTheme: (name) => setThemeName(name),
-    setScreen: (name) => setCurrentScreen(name),
+    setScreen: (name) => {
+      setCurrentScreen(name);
+      setInputText("");
+    },
     setUserName: (name) => setUserName(name)
   };
 
   // ── Render Mantığı ────────────────────────────────────────────────
   const screenData = screens[currentScreen] || screens.main;
   
-  // Ekran verilerini klonla ve kullanıcı bilgisini enjekte et
   let finalNodes = screenData.nodes.map(node => {
     if (node.type === "ProfileHeader") {
-      return { ...node, props: { ...node.props, name: userName, username: userHandle } };
+      return { ...node, props: { ...node.props, name: userName, username: "@aura_user" } };
+    }
+    if (node.type === "HeaderTabs") {
+      return { ...node, props: { ...node.props, active: currentScreen === 'ai_chat' ? 'ai_chat' : 'main' } };
+    }
+    if (node.type === "TypingIndicator") {
+      return { ...node, props: { ...node.props, isTyping } };
     }
     return node;
   });
 
-  // Chat ekranı için mesaj listesi birleştirme
+  // Mesajları ilgili ekrana enjekte et
   if (currentScreen === 'chat') {
     const inputIndex = finalNodes.findIndex(n => n.type === 'ChatInput');
     if (inputIndex > -1) {
-      const chatNodes = [...finalNodes];
-      chatNodes.splice(inputIndex, 0, ...messages);
-      finalNodes = chatNodes;
+      finalNodes.splice(inputIndex, 0, ...messages);
+    }
+  } else if (currentScreen === 'ai_chat') {
+    const inputIndex = finalNodes.findIndex(n => n.type === 'ChatInput');
+    if (inputIndex > -1) {
+      finalNodes.splice(inputIndex, 0, ...aiMessages);
     }
   }
 
@@ -146,7 +213,7 @@ export default function App() {
               ...inputNode.props, 
               value: inputText, 
               onChangeText: handlers.onChangeText,
-              onSend: handlers.handleSend 
+              onSend: node.onSend === 'handleSendAI' ? handlers.handleSendAI : handlers.handleSend 
             }
           }, "input-fixed", handlers, activeTheme)}
 

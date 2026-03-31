@@ -18,9 +18,9 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Iterations | 6 |
-| Total Weight (kg) | 150 |
-| Total Time (min) | 95 |
+| Total Iterations | 7 |
+| Total Weight (kg) | 180 |
+| Total Time (min) | 110 |
 | Failed Attempts | 1 |
 
 ---
@@ -106,31 +106,31 @@ Aura Chat: modern, light-mode, white tones design. Use a soft blue/purple gradie
 
 | Field | Value |
 |-------|-------|
-| Feature | Archives, Profile & Settings (Phase A) |
-| Weight | 25 kg |
-| Tool Used | Stitch + Antigravity |
+| Feature | Gemini AI Integration (Phase B) |
+| Weight | 30 kg |
+| Tool Used | Gemini API + Antigravity |
 | Time | 15 min |
 | Attempts | 1 |
 | Status | ✅ Success |
 
 **Prompt given to AI:**
 ```
-Faz A: Arşivlenenler ekranı ekle, Profil/Ayarlar kısmını (isim, kullanıcı adı, ayarlar) detaylandır. Renk seçme kısmını Ayarların içine taşı.
+Phase B: Gemini AI entegre et. Üstte sekmeli yapı olsun (Mesajlar | Aura AI). AI sadece kendi sekmesinde aktif olsun ve kotayı koru. Yazıyor animasyonu ekle.
 ```
 
 **What happened:**
-- Implemented `archive` screen with `EmptyState`. Enhanced `settings` with `ProfileHeader` and `SettingItem`. Added `userName` persistence. Fixed Metro cache issues that caused bundling errors.
+- Integrated Gemini-1.5-Flash API for cost-effective zeka. Created `ai_chat` screen and `HeaderTabs` for navigation. Implemented `isTyping` state with a custom indicator. Separated AI messages for persistence and quota control.
 
 **Screenshot:** `[link]`
 
-**Commit:** `[NAIM: AuraChat] Phase A: Archives & Profile - 25kg`
+**Commit:** `[NAIM: AuraChat] Phase B: Gemini AI Integration - 30kg`
 
 ---
 
 ## 🧠 Reflection (fill at the end)
 
 **Hardest part:**
-> Solving the "Unable to resolve react" bundling error by flushing Metro cache while simultaneously expanding the UI logic to handle 4 separate screens.
+> Implementing the separate screen routing logic for AI chat while ensuring the API key is used safely and only when explicitly triggered by the user.
 
 **What AI did well:**
-> Seamlessly integrated the "Aura Ethos" design across Archive and Settings, maintaining a consistent premium look with tonal shifts instead of borders.
+> Designed a very clean "Tab" system at the top that feels native and premium, matching the Aura Ethos aesthetic.
