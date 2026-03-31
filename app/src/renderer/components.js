@@ -3,14 +3,14 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 
 const COMPONENT_MAP = {
 
-  Header: ({ text, subtitle }, index, handlers, theme) => (
+  Header: ({ text, subtitle, theme }) => (
     <View style={[styles.header, { backgroundColor: theme.bg }]}>
       <Text style={[styles.headerText, { color: theme.text }]}>{text}</Text>
       {subtitle ? <Text style={[styles.subtitleText, { color: theme.text, opacity: 0.7 }]}>{subtitle}</Text> : null}
     </View>
   ),
 
-  Text: ({ text, align }, index, handlers, theme) => (
+  Text: ({ text, align, theme }) => (
     <Text style={[styles.bodyText, align && { textAlign: align }, { color: theme.text }]}>{text}</Text>
   ),
 
@@ -34,14 +34,14 @@ const COMPONENT_MAP = {
     </TouchableOpacity>
   ),
 
-  Card: ({ title, body }, index, handlers, theme) => (
+  Card: ({ title, body, theme }) => (
     <View style={[styles.card, { backgroundColor: theme.bg === '#FFFFFF' ? '#F8F9FA' : theme.bubbleThem }]}>
       {title ? <Text style={[styles.cardTitle, { color: theme.text }]}>{title}</Text> : null}
       {body  ? <Text style={[styles.cardBody, { color: theme.text, opacity: 0.8 }]}>{body}</Text>   : null}
     </View>
   ),
 
-  MessageBubble: ({ text, sender, time }, index, handlers, theme) => (
+  MessageBubble: ({ text, sender, time, theme }) => (
     <View style={[
       styles.bubbleContainer,
       sender === 'me' ? styles.bubbleMeContainer : styles.bubbleThemContainer
@@ -61,7 +61,7 @@ const COMPONENT_MAP = {
     </View>
   ),
 
-  ChatInput: ({ placeholder, value, onChangeText, onSend }, index, handlers, theme) => (
+  ChatInput: ({ placeholder, value, onChangeText, onSend, theme }) => (
     <View style={[styles.inputContainer, { backgroundColor: theme.bg, borderTopColor: theme.bg === '#000000' ? '#333' : '#E7E8E9' }]}>
       <TextInput
         style={[styles.chatInput, { backgroundColor: theme.bubbleThem, color: theme.text }]}
@@ -81,7 +81,7 @@ const COMPONENT_MAP = {
     </View>
   ),
 
-  ThemeSelector: ({ themes }, index, handlers, theme) => (
+  ThemeSelector: ({ handlers }) => (
     <View style={styles.themeSelector}>
       {['aura', 'midnight', 'noir'].map(name => (
         <TouchableOpacity 
