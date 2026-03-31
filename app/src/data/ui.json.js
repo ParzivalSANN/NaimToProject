@@ -1,53 +1,60 @@
 export const screen = {
-  id: "home",
-  title: "Ana Ekran",
+  id: "chat-room",
+  title: "Chat ile Naim",
   nodes: [
     {
       type: "Header",
       props: {
-        text: "🏋️ NAIM Chat",
-        subtitle: "Server-Driven UI — İterasyon 1"
+        text: "🏋️ Naim Chat",
+        subtitle: "Online - SDUI v2"
       }
     },
     {
       type: "Spacer",
-      props: { height: 20 }
+      props: { height: 16 }
     },
     {
-      type: "Text",
+      type: "MessageBubble",
       props: {
-        text: "Bu metin doğrudan JSON'dan geliyor.",
-        align: "center"
+        text: "Selam! Uygulama nasıl gidiyor?",
+        sender: "them",
+        time: "11:45"
       }
     },
     {
-      type: "Divider"
+      type: "MessageBubble",
+      props: {
+        text: "Harika! İkinci iterasyona geçtik bile. Mesaj balonları JSON'dan geliyor.",
+        sender: "me",
+        time: "11:46"
+      }
     },
     {
-      type: "Card",
+      type: "MessageBubble",
       props: {
-        title: "📦 JSON Renderer Çalışıyor",
-        body: "ui.json'daki her node bu bileşen kataloğu aracılığıyla ekrana çiziliyor."
+        text: "Süper, peki bu veriler dinamik mi?",
+        sender: "them",
+        time: "11:47"
+      }
+    },
+    {
+      type: "MessageBubble",
+      props: {
+        text: "Evet, şimdi fetch simulation ekliyoruz.",
+        sender: "me",
+        time: "11:48"
       }
     },
     {
       type: "Spacer",
-      props: { height: 12 }
+      props: { height: 80 }
     },
     {
-      type: "Button",
+      type: "ChatInput",
       props: {
-        label: "Test Butonu",
-        variant: "primary"
+        placeholder: "Mesajınızı yazın...",
       },
-      onPress: "handleTest"
-    },
-    {
-      type: "Button",
-      props: {
-        label: "İkincil Buton",
-        variant: "secondary"
-      }
+      onSend: "handleSend"
     }
   ]
 };

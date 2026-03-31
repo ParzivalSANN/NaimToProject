@@ -41,6 +41,40 @@ const COMPONENT_MAP = {
     </View>
   ),
 
+  MessageBubble: ({ text, sender, time }) => (
+    <View style={[
+      styles.bubbleContainer,
+      sender === 'me' ? styles.bubbleMeContainer : styles.bubbleThemContainer
+    ]}>
+      <View style={[
+        styles.bubble,
+        sender === 'me' ? styles.bubbleMe : styles.bubbleThem
+      ]}>
+        <Text style={[
+          styles.bubbleText,
+          sender === 'me' ? styles.bubbleMeText : styles.bubbleThemText
+        ]}>{text}</Text>
+        {time ? <Text style={styles.bubbleTime}>{time}</Text> : null}
+      </View>
+    </View>
+  ),
+
+  ChatInput: ({ placeholder, value, onChangeText, onSend }) => (
+    <View style={styles.inputContainer}>
+      <TextInput
+        style={styles.chatInput}
+        placeholder={placeholder || "Type a message..."}
+        value={value}
+        onChangeText={onChangeText}
+        placeholderTextColor="#888"
+        multiline={false}
+      />
+      <TouchableOpacity style={styles.sendButton} onPress={onSend}>
+        <Text style={styles.sendButtonText}>Send</Text>
+      </TouchableOpacity>
+    </View>
+  ),
+
   Input: ({ placeholder, value, onChangeText }) => (
     <TextInput
       style={styles.input}
@@ -168,5 +202,74 @@ const styles = StyleSheet.create({
   unknownText: {
     color: '#ff8888',
     fontSize: 12,
+  },
+  // ── Chat Bileşen Stilleri ─────────────────────────────────────────
+  bubbleContainer: {
+    width: '100%',
+    marginVertical: 4,
+    paddingHorizontal: 12,
+  },
+  bubbleMeContainer: {
+    alignItems: 'flex-end',
+  },
+  bubbleThemContainer: {
+    alignItems: 'flex-start',
+  },
+  bubble: {
+    maxWidth: '80%',
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 18,
+  },
+  bubbleMe: {
+    backgroundColor: '#5c5cff',
+    borderBottomRightRadius: 4,
+  },
+  bubbleThem: {
+    backgroundColor: '#2a2a4a',
+    borderBottomLeftRadius: 4,
+  },
+  bubbleText: {
+    fontSize: 15,
+  },
+  bubbleMeText: {
+    color: '#fff',
+  },
+  bubbleThemText: {
+    color: '#e0e0ff',
+  },
+  bubbleTime: {
+    fontSize: 10,
+    color: 'rgba(255, 255, 255, 0.5)',
+    marginTop: 2,
+    alignSelf: 'flex-end',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1a1a2e',
+    padding: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#2a2a4a',
+  },
+  chatInput: {
+    flex: 1,
+    backgroundColor: '#0d0d1a',
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    color: '#fff',
+    fontSize: 15,
+    marginRight: 10,
+  },
+  sendButton: {
+    backgroundColor: '#5c5cff',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  sendButtonText: {
+    color: '#fff',
+    fontWeight: '700',
   },
 });
