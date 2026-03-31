@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -8,6 +7,7 @@ import {
   Platform,
   View,
 } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ── Renderer & Veri ─────────────────────────────────────────────────
@@ -26,8 +26,8 @@ const THEMES = {
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState("main");
-  const [messages, setMessages] = useState([]); // Normal sohbetler
-  const [aiMessages, setAiMessages] = useState([]); // Aura AI sohbeti
+  const [messages, setMessages] = useState([]);
+  const [aiMessages, setAiMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [themeName, setThemeName] = useState("aura");
   const [userName, setUserName] = useState("Misafir Kullanıcı");
@@ -182,45 +182,51 @@ export default function App() {
     }
   }
 
-  const listNodes = finalNodes.filter(node => node.type !== "ChatInput" && node.type !== "BottomNav");
+  // Scroll içinde ve dışında basılacakları ayır
   const inputNode = finalNodes.find(node => node.type === "ChatInput");
   const navNode = finalNodes.find(node => node.type === "BottomNav");
+  const fabNode = finalNodes.find(node => node.type === "FAB");
+  const scrollNodes = finalNodes.filter(node => node.type !== "ChatInput" && node.type !== "BottomNav" && node.type !== "FAB");
 
   if (!isLoaded) return null;
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: activeTheme.bg }]}>
-      <StatusBar barStyle={activeTheme.statusBar} backgroundColor={activeTheme.bg} />
-      
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
-        <View style={{ flex: 1 }}>
-          <ScrollView
-            ref={scrollRef}
-            style={styles.scroll}
-            contentContainerStyle={styles.content}
-            keyboardShouldPersistTaps="handled"
-            onContentSizeChange={scrollToBottom}
-          >
-            {listNodes.map((node, i) => renderNode(node, i, handlers, activeTheme))}
-          </ScrollView>
+    <SafeAreaProvider>
+      <SafeAreaView style={[styles.container, { backgroundColor: activeTheme.bg }]} edges={['top', 'left', 'right']}>
+        <StatusBar barStyle={activeTheme.statusBar} backgroundColor={activeTheme.bg} />
+        
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <View style={{ flex: 1 }}>
+            <ScrollView
+              ref={scrollRef}
+              style={styles.scroll}
+              contentContainerStyle={styles.content}
+              keyboardShouldPersistTaps="handled"
+              onContentSizeChange={scrollToBottom}
+            >
+              {scrollNodes.map((node, i) => renderNode(node, i, handlers, activeTheme))}
+            </ScrollView>
 
-          {inputNode && renderNode({
-            ...inputNode,
-            props: { 
-              ...inputNode.props, 
-              value: inputText, 
-              onChangeText: handlers.onChangeText,
-              onSend: node.onSend === 'handleSendAI' ? handlers.handleSendAI : handlers.handleSend 
-            }
-          }, "input-fixed", handlers, activeTheme)}
+            {fabNode && renderNode(fabNode, "fab-fixed", handlers, activeTheme)}
 
-          {navNode && renderNode(navNode, "nav-fixed", handlers, activeTheme)}
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            {inputNode && renderNode({
+              ...inputNode,
+              props: { 
+                ...inputNode.props, 
+                value: inputText, 
+                onChangeText: handlers.onChangeText,
+                onSend: inputNode.onSend === 'handleSendAI' ? handlers.handleSendAI : handlers.handleSend 
+              }
+            }, "input-fixed", handlers, activeTheme)}
+
+            {navNode && renderNode(navNode, "nav-fixed", handlers, activeTheme)}
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -232,6 +238,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingBottom: 100,
+    paddingBottom: 120, // Daha fazla boşluk (Fixed FAB ve Nav için)
   },
 });
