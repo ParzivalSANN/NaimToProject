@@ -1,48 +1,40 @@
 export const screen = {
-  id: "chat-room",
-  title: "Chat ile Naim",
+  id: "chat-room-aura",
+  title: "Aura Chat",
   nodes: [
     {
       type: "Header",
       props: {
-        text: "🏋️ Naim Chat",
-        subtitle: "Online - SDUI v2"
+        text: "Aura Chat",
+        subtitle: "Online - The Ethereal Conduit"
       }
     },
     {
       type: "Spacer",
-      props: { height: 16 }
+      props: { height: 24 }
     },
     {
       type: "MessageBubble",
       props: {
-        text: "Selam! Uygulama nasıl gidiyor?",
+        text: "Aura Chat'e hoş geldin! Temiz ve ferah bir tasarım seni bekliyor.",
         sender: "them",
-        time: "11:45"
+        time: "17:10"
       }
     },
     {
       type: "MessageBubble",
       props: {
-        text: "Harika! İkinci iterasyona geçtik bile. Mesaj balonları JSON'dan geliyor.",
+        text: "Mor ve beyaz tonları harika duruyor. Tasarım sistemine 'The Ethereal Conduit' adını verdik.",
         sender: "me",
-        time: "11:46"
+        time: "17:11"
       }
     },
     {
       type: "MessageBubble",
       props: {
-        text: "Süper, peki bu veriler dinamik mi?",
+        text: "Gerçekten de öyle. Akıcı ve şık bir deneyim için her şey hazır.",
         sender: "them",
-        time: "11:47"
-      }
-    },
-    {
-      type: "MessageBubble",
-      props: {
-        text: "Evet, şimdi fetch simulation ekliyoruz.",
-        sender: "me",
-        time: "11:48"
+        time: "17:12"
       }
     },
     {
@@ -52,7 +44,7 @@ export const screen = {
     {
       type: "ChatInput",
       props: {
-        placeholder: "Mesajınızı yazın...",
+        placeholder: "Aura ile bir şeyler yaz...",
       },
       onSend: "handleSend"
     }

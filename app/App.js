@@ -66,7 +66,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0d0d1a" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F8F9FA" />
       
       <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -100,7 +100,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0d0d1a',
+    backgroundColor: '#F8F9FA',
   },
   scroll: {
     flex: 1,

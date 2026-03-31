@@ -9,8 +9,8 @@
 
 **NAIM Name:** `Samsun Pocket Hercules`  
 **Crew:** `Naim To Project Team`  
-**App Concept:** `A mobile chat app dynamic rendered from JSON (Server-driven UI).`  
-**Starting Tool:** `Antigravity`
+**App Concept:** `Aura Chat — A premium, server-driven mobile chat experience.`  
+**Starting Tool:** `Antigravity + Stitch`
 
 ---
 
@@ -18,10 +18,10 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Iterations | 1 |
-| Total Weight (kg) | 25 |
-| Total Time (min) | 20 |
-| Failed Attempts | 0 |
+| Total Iterations | 3 |
+| Total Weight (kg) | 75 |
+| Total Time (min) | 50 |
+| Failed Attempts | 1 |
 
 ---
 
@@ -58,24 +58,24 @@ Mevcut mobil şablonumuzun içine, basit bir JSON objesini okuyup ekrana dinamik
 
 | Field | Value |
 |-------|-------|
-| Feature | |
-| Weight | |
-| Tool Used | |
-| Time | |
-| Attempts | |
-| Status | |
+| Feature | Chat UI & Dynamic Fetch |
+| Weight | 25 kg |
+| Tool Used | Antigravity |
+| Time | 15 min |
+| Attempts | 2 (Layout fix) |
+| Status | ✅ Success |
 
 **Prompt given to AI:**
 ```
-
+Dinamik Mesajlaşma Arayüzü & İlk "Canlı" Veri Akışı İterasyonu. Mesaj balonları, input alanı ve mock fetch ekle.
 ```
 
 **What happened:**
-- 
+- Added `MessageBubble` and `ChatInput`. Fixed a layout issue where the input was stuck in the middle. Pinned it to the bottom with `KeyboardAvoidingView`.
 
-**Screenshot:**
+**Screenshot:** `[link]`
 
-**Commit:**
+**Commit:** `[NAIM: NaimToProject] Added Chat UI Components & Dynamic Fetch - 25kg`
 
 ---
 
@@ -83,24 +83,24 @@ Mevcut mobil şablonumuzun içine, basit bir JSON objesini okuyup ekrana dinamik
 
 | Field | Value |
 |-------|-------|
-| Feature | |
-| Weight | |
-| Tool Used | |
-| Time | |
-| Attempts | |
-| Status | |
+| Feature | Aura Chat Re-branding & Premium Design |
+| Weight | 25 kg |
+| Tool Used | Stitch + Antigravity |
+| Time | 15 min |
+| Attempts | 1 |
+| Status | ✅ Success |
 
 **Prompt given to AI:**
 ```
-
+Aura Chat: modern, light-mode, white tones design. Use a soft blue/purple gradient for sent messages and light gray for received ones. Floating input bar.
 ```
 
 **What happened:**
-- 
+- Complete visual overhaul. Switched from dark to "White Tones" premium theme. Renamed app to Aura Chat. Applied "Aura Ethos" design system.
 
-**Screenshot:**
+**Screenshot:** `[link]`
 
-**Commit:**
+**Commit:** `[NAIM: AuraChat] Re-branding & Premium White Design - 25kg`
 
 ---
 
